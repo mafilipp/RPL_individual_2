@@ -1,0 +1,70 @@
+#include <ros/ros.h>
+#include <nav_msgs/OccupancyGrid.h>
+#include <nav_msgs/Path.h>
+
+// Callback function for map messages
+void mapCallback(const nav_msgs::OccupancyGrid::ConstPtr& msg)
+{
+  ROS_INFO("I read a map!");
+}
+
+// Compute a path between start and goal
+nav_msgs::Path computePath(geometry_msgs::Point start, geometry_msgs::Point goal)
+{
+  nav_msgs::Path path;
+
+  ROS_INFO("path from (%f, %f, %f) to (%f, %f, %f)", start.x, start.y, start.z, goal.x, goal.y, goal.z);
+
+  // Set the header and initialize the poses array
+  path.header.stamp = ros::Time::now();
+  path.header.frame_id = "map";
+  path.poses = std::vector<geometry_msgs::PoseStamped>(2); 
+
+  // Set start as the first pose
+  path.poses[0].header.stamp = path.header.stamp;
+  path.poses[0].header.frame_id = path.header.frame_id;
+  path.poses[0].pose.position = start;
+
+  // Set goal as the second pose
+  path.poses[1].header.stamp = path.header.stamp;
+  path.poses[1].header.frame_id = path.header.frame_id;
+  path.poses[1].pose.position = goal;
+
+  return path;
+}
+
+int main(int argc, char **argv)
+{
+  // Initialize the node
+  ros::init(argc, argv, "path_planner");
+
+  ros::NodeHandle n;
+
+  // Set publisher and subscriber
+  ros::Subscriber mapSubscriber = n.subscribe<nav_msgs::OccupancyGrid>("/map", 1000, mapCallback);
+  ros::Publisher pathPublisher = n.advertise<nav_msgs::Path>("/path", 10);
+
+  ros::Rate loop_rate(1);
+
+  // Initialize start, goal, and goal increment
+  geometry_msgs::Point start, goal;
+  double goalIncrement = 0.1;
+  start.x = start.y = start.z = 0.0;
+  goal.x = goal.y = goal.z = 0.0;
+asd
+  while (ros::ok() && goal.x < 2.0)
+  {
+    ros::spinOnce();
+
+    // Update the start and the goal
+    start = goal;
+    goal.x += goalIncrement;
+
+    // Publish the path
+    pathPublisher.publish(computePath(start, goal));
+    loop_rate.sleep();
+  }
+
+
+  return 0;
+}

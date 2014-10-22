@@ -1,0 +1,15 @@
+
+
+#include <geometry_msg/Point.h>
+
+class AStarSearch : public GraphSearch
+{
+public: 
+	//...
+	void findPath(geometry_msg::Point start, geometry_msgs::Point goal);
+	//...
+protected:
+	//...
+private:
+	//...
+};
