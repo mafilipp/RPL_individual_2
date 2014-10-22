@@ -10,6 +10,7 @@
 
 #include <geometry_msgs/Point.h>
 #include "graph_search.h"
+#include "Node.h"
 
 class AStarSearch : public GraphSearch
 {

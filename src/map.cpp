@@ -16,7 +16,16 @@ Map::Map(double robotSize)
 
 Map::Map(nav_msgs::OccupancyGrid map, double robotSize)
 {
-	//...
+	assert(robotSize>=0); // Ensure that the robot size is non-negative
+	m_robotSize = robotSize;
+
+	//Create the map
+	height = map.info.height;
+	width = map.info.width;
+	m_map = map;
+	initial_pose = map.info.origin;
+	resolution = map.info.resolution;
+	radius_in_px = m_robotSize/resolution; //[cell]
 }
 
 Map::~Map()

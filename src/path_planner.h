@@ -19,7 +19,7 @@ public:
 protected:
 	//...
 private:
-	//...
+	geometry_msgs::Point start, goal;
 };
 
 

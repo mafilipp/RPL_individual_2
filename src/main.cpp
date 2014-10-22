@@ -2,15 +2,24 @@
 #include <nav_msgs/OccupancyGrid.h>
 #include <nav_msgs/Path.h>
 #include "map.h"
+#include "map.cpp"
 #include "path_planner.h"
 #include "graph_search.h"
 #include "A_star_search.h"
+#include "Node.h"
+#include "Node.cpp"
+#include <queue>
+#include <vector>
+
+using namespace std;
+
 
 
 // Callback function for map messages
 void mapCallback(const nav_msgs::OccupancyGrid::ConstPtr& msg)
 {
   ROS_INFO("I read a map!");
+
 }
 
 
@@ -50,9 +59,28 @@ int main(int argc, char **argv)
   ros::Subscriber mapSubscriber = n.subscribe<nav_msgs::OccupancyGrid>("/map", 1000, mapCallback);
   ros::Publisher pathPublisher = n.advertise<nav_msgs::Path>("/path", 10);
 
-
+  // Ask to the user for the desired robot radius
+  double robotRadius;
+  robotRadius = 0.0;
+  /////////////////////////// Test for pick out the node with major cost
+  Node a1(12,12);
+  Node a2(12,23);
+  a1.cost = 1;
+  a2.cost = 333;
+  std::priority_queue<Node, std::vector<Node>, CompareNodeCost> costQueue;
+  costQueue.push(a1);
+  costQueue.push(a2);
+  std::cout << costQueue.top().cost << std::endl;
+  costQueue.pop();
+  std::cout << costQueue.top().cost << std::endl;
+//  std::vector<int> asd;
+  //////////////////////////7
   // Define variable
-  //  Map gridMap(...);
+  Map gridMap(robotRadius);
+
+  // Inflate the gridMap with the robot radius
+  gridMap.inflate();
+
   //  AStarSearch aStarPlanner(...);
 
 

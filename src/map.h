@@ -5,8 +5,8 @@
  *      Author: mafilipp
  */
 
-//#ifndef MAFILIPP_PATH_PLANNING_SRC_MAP_H_
-//#define MAFILIPP_PATH_PLANNING_SRC_MAP_H_
+#ifndef MAFILIPP_PATH_PLANNING_SRC_MAP_H_
+#define MAFILIPP_PATH_PLANNING_SRC_MAP_H_
 
 #include <nav_msgs/OccupancyGrid.h>
 
@@ -18,6 +18,7 @@ public:
 	//...
 	~Map();
 
+	// inflate the current Map
 	void inflate(); // Inflate the map by the robot's radius
 	//...
 
@@ -29,8 +30,13 @@ public:
 private:
 	double m_robotSize;
 	nav_msgs::OccupancyGrid m_map;
+	int height, width;
+	geometry_msgs::Pose initial_pose;
+	float resolution;
+	float radius_in_px;
+
 	//...
 };
 
 
-//#endif /* MAFILIPP_PATH_PLANNING_SRC_MAP_H_ */
+#endif /* MAFILIPP_PATH_PLANNING_SRC_MAP_H_ */
