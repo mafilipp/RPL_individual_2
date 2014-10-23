@@ -19,11 +19,6 @@ using namespace std;
 void mapCallback(const nav_msgs::OccupancyGrid::ConstPtr& msg)
 {
   ROS_INFO("I read a map!");
-  Map inflatedMap(*msg,3.0);
-
-//  Map::Map(nav_msgs::OccupancyGrid map, double robotSize)
-
-//  gridMap.m_map = *msg;
 }
 
 
@@ -60,7 +55,7 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "path_planner");
 
   double robotRadius;
-  robotRadius = 0.0;
+  robotRadius = 0.06; //[m]
   Map gridMap(robotRadius);
 
   ros::NodeHandle n;
@@ -73,6 +68,17 @@ int main(int argc, char **argv)
   ros::Publisher pathPublisher = n.advertise<nav_msgs::Path>("/path", 10);
 
 
+//  //Get the time and store it in the time variable.
+//  // This to be sure that the map is up to date with the callback
+//  ros::Time time = ros::Time::now();
+//  //Wait a duration of one second.
+//  ros::Duration d = ros::Duration(1, 0);
+//  d.sleep();
+
+
+
+
+
   // Ask to the user for the desired robot radius
 
 
@@ -81,7 +87,6 @@ int main(int argc, char **argv)
   //  execte function mapCallback with the object gridMap
 
   // Inflate the gridMap with the robot radius
-  gridMap.inflate();
 
   //  AStarSearch aStarPlanner(...);
 //  aStarPlanner.setPublisher(pathPublisher);
@@ -99,6 +104,8 @@ int main(int argc, char **argv)
 //    std::cout << costQueue.top().cost << std::endl;
   ////  std::vector<int> asd;
 
+
+
   ros::Rate loop_rate(1);
 
   // Initialize start, goal, and goal increment
@@ -111,13 +118,30 @@ int main(int argc, char **argv)
   {
     ros::spinOnce();
 
+//    while(not gridMap.isUpToDate())
+//    {
+//  	  // Wait
+//    }
+
+    ROS_INFO("Before inflate");
+    gridMap.inflate();
+    ROS_INFO("After inflate");
+
+
     // Update the start and the goal
     start = goal;
     goal.x += goalIncrement;
 
+
     // Publish the path
     pathPublisher.publish(computePath(start, goal));
     loop_rate.sleep();
+
+
+    inflatedMapPublisher.publish(gridMap.getMap());
+
+
+
   }
 
 

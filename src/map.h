@@ -42,8 +42,8 @@ public:
 	void setRadiusPx(int radiusPx);
 	float getResolution() const;
 	void setResolution(float resolution);
-
-
+	bool isUpToDate() const;
+	void setUpToDate(bool upToDate);
 
 private:
 	double m_robotSize;
@@ -53,6 +53,7 @@ private:
 	float resolution;
 	int radiusPx;
 	int originPx[2];
+	bool upToDate;
 
 };
 
