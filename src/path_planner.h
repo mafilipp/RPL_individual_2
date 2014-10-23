@@ -13,13 +13,14 @@
 class PathPlanner
 {
 public:
-	//...
+	PathPlanner();
+//	PathPlanner(geometry_msgs::Point _start, geometry_msgs::Point _goal);
+	~PathPlanner();
 	virtual void findPath(geometry_msgs::Point start, geometry_msgs::Point goal) = 0;
 	//...
 protected:
-	//...
+//	geometry_msgs::Point start, goal;
 private:
-	geometry_msgs::Point start, goal;
 };
 
 

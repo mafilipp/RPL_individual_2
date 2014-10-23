@@ -4,14 +4,29 @@
 #include <assert.h>
 #include <queue>          // std::priority_queue
 
-AStarSearch::findPath(geometry_msg::Point start, geometry_msgs::Point goal)
+
+AStarSearch::AStarSearch()
 {
-	std::priority_queue<int> mypq;
-
-	mypq.push(10);
-
+	//
+}
+//AStarSearch::AStarSearch(geometry_msgs::Point _start, geometry_msgs::Point _goal)
+//{
+//	GraphSearch(_start, _goal);
+//}
+AStarSearch::~AStarSearch()
+{
 
 }
+
+//AStarSearch::findPath(geometry_msgs::Point start, geometry_msgs::Point goal)
+//{
+//
+//	int startPx_x, startPx_z, goalPx_x, goalPx_z;
+//	//startPx_x = start.x * resolution;
+//
+//
+//
+//}
 
 
 

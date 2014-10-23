@@ -15,7 +15,9 @@
 class AStarSearch : public GraphSearch
 {
 public: 
-	//...
+	AStarSearch();
+//	AStarSearch(geometry_msgs::Point _start, geometry_msgs::Point _goal);
+	~AStarSearch();
 	void findPath(geometry_msgs::Point start, geometry_msgs::Point goal);
 	//...
 protected:

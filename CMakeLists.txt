@@ -94,15 +94,15 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-# include_directories(include)
+include_directories(include)
 include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a cpp library
-# add_library(path_planning
-#   src/${PROJECT_NAME}/path_planning.cpp
-# )
+ add_library(map
+   src/map.cpp
+ )
 
 ## Declare a cpp executable
 # add_executable(path_planning_node src/path_planning_node.cpp)
@@ -165,5 +165,5 @@ include_directories(
 # catkin_add_nosetests(test)
 
 add_executable(path_planning src/main.cpp)
-target_link_libraries(path_planning ${catkin_LIBRARIES})
+target_link_libraries(path_planning map ${catkin_LIBRARIES})
 #add_dependencies(talker beginner_tutorials_generate_messages_cpp)
