@@ -53,7 +53,7 @@ private:
 	float resolution;
 	int radiusPx;
 	int originPx[2];
-	bool upToDate;
+	bool upToDate, alreadyInflated;
 
 };
 

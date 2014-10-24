@@ -33,6 +33,7 @@ Map::Map(nav_msgs::OccupancyGrid map, double robotSize)
 	if (radiusPx % 2 == 0)
 			radiusPx += 1; // In order to inflate the map we need a odd filter
 	upToDate = 1;
+	alreadyInflated = false;
 }
 
 Map::~Map()
@@ -65,26 +66,38 @@ void Map::mapCallback(const nav_msgs::OccupancyGrid::ConstPtr &map)
 //[2][0]  [2][1]  [2][2]  [2][3]  [2][4]
 void Map::inflate()
 {
-	if( m_robotSize > 0 and upToDate)
+	if( m_robotSize > 0 and upToDate and not alreadyInflated)
 	{
 
 		Map inflatedMap(m_map,m_robotSize);
-//		ROS_INFO("nColumn = %d", inflatedMap.nColumn);
-//
-//		ROS_INFO("resolution = %f", inflatedMap.resolution);
-//
-//		ROS_INFO("radius = %d", inflatedMap.radiusPx);
+
+		ROS_INFO("nColumn = %d", inflatedMap.nColumn);
+
+		ROS_INFO("resolution = %f", inflatedMap.resolution);
+
+		ROS_INFO("radius = %d", inflatedMap.radiusPx);
 
 		// Create the dimension that we want to add to the original image due to the boundary condition needed for the filtering
 		int dimAdded = (radiusPx-1)/2; // We know that the radius is odd
 
+		ROS_INFO("added = %d", dimAdded);
+
 		// Generate a map as a matrix, not an array. Here we add some space
 		int FilterCalcMap[nRow + 2*dimAdded] [nColumn + 2*dimAdded];
 
-		// Populate
-		for(int c = dimAdded; c < nColumn + dimAdded; c++) // No need to do -1 since the array start at 0
+		// Initialize
+		for(int r = 0; r < nRow + 2*dimAdded; r++)
 		{
-			for(int r = dimAdded; r < nRow + dimAdded; r++)
+			for(int c = 0; c < nColumn + 2*dimAdded; c++) // No need to do -1 since the array start at 0
+			{
+				FilterCalcMap[r][c] = 0;
+			}
+		}
+		// Populate
+
+		for(int r = dimAdded; r < nRow + dimAdded; r++)
+		{
+			for(int c = dimAdded; c < nColumn + dimAdded; c++) // No need to do -1 since the array start at 0
 			{
 				FilterCalcMap[r][c] = m_map.data[(c - dimAdded) + (r - dimAdded)*nColumn];
 			}
@@ -103,6 +116,7 @@ void Map::inflate()
 		}
 		 // Create the filter kernel
 		int kernel[radiusPx][radiusPx];
+//		 double* a = new int[n]; // Don't forget to delete [] a; when you're done!
 
 
 		// Populate the kernel in a circle way
@@ -118,27 +132,30 @@ void Map::inflate()
 //		}
 		// make it all occupied
 
-		for(int c = 0; c < radiusPx - 1; c++)
+
+		for(int r = 0; r < radiusPx; r++)
 		{
-			for(int r = 0; r < radiusPx - 1; r++)
+			for(int c = 0; c < radiusPx; c++)
 			{
 					kernel[r][c] = 1;
 			}
 		}
 
-
+// ok Fino a qui
 		// Filter the image
-//		for(int c = dimAdded; c >= nColumn + dimAdded; c++)
+//		for(int r = dimAdded; r < nRow + dimAdded; r++)
 //		{
-//			for(int r = dimAdded; r >= nRow + dimAdded; r++)
+//			for(int c = dimAdded; c < nColumn + dimAdded; c++)
 //			{
+//
 //				bool touch = false;
 //
-//				for (int cF = 0; cF >= radiusPx; cF++)
+//				for (int rF = 0; rF < radiusPx; rF++)
 //				{
-//					for (int rF = 0; rF >= radiusPx; rF++)
+//					for (int cF = 0; cF < radiusPx; cF++)
 //					{
-//						if((kernel[cF][rF] > 0) && (FilterCalcMap[c + cF][r + rF] > 0))
+//
+//						if((kernel[rF][cF] > 0) && (FilterCalcMap[r + rF][c + cF] > 0))
 //						{
 //							touch = true;
 //							break;
@@ -147,12 +164,38 @@ void Map::inflate()
 //					}
 //				}
 //
-//				if (true)
+//				if (touch)
 //				{
-//					inflatedFiltredMap[c - dimAdded][r - dimAdded] = 1;
+//					inflatedFiltredMap[c - dimAdded][r - dimAdded] = 100;
 //				}
 //			}
-//		}
+		for(int r = 0; r < nRow + dimAdded; r++)
+		{
+			for(int c = 0; c < nColumn + dimAdded; c++)
+			{
+
+				bool touch = false;
+
+				for (int rF = 0; rF < radiusPx; rF++)
+				{
+					for (int cF = 0; cF < radiusPx; cF++)
+					{
+
+						if((kernel[rF][cF] > 0) && (FilterCalcMap[r + rF][c + cF] > 0))
+						{
+							touch = true;
+//							break;
+						}
+
+					}
+				}
+
+				if (touch)
+				{
+					inflatedFiltredMap[r][c] = 60;
+				}
+			}
+		}
 		// Reconvert the inflated map in a data array
 
 //		ROS_INFO("asdasd");
@@ -171,6 +214,8 @@ void Map::inflate()
 			}
 		}
 		  ROS_INFO("Pass inflate");
+
+	alreadyInflated = true;
 
 
 
