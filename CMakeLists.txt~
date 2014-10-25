@@ -94,16 +94,12 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-# include_directories(include)
+include_directories(include)
 include_directories(
-  ${catkin_INCLUDE_DIRS}/include
+  ${catkin_INCLUDE_DIRS}
 )
-#include_directories(${PROJECT_SOURCE_DIR}/include${SIMULINK_OUTPUT_DIR})
 
 ## Declare a cpp library
-# add_library(path_planning
-#   src/${PROJECT_NAME}/path_planning.cpp
-# )
 
 ## Declare a cpp executable
 # add_executable(path_planning_node src/path_planning_node.cpp)
@@ -165,6 +161,6 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-add_executable(path_planning src/main.cpp)
+add_executable(path_planning src/main.cpp src/map.cpp src/Node.cpp src/path_planner.cpp src/graph_search.cpp src/A_star_search.cpp)
 target_link_libraries(path_planning ${catkin_LIBRARIES})
 #add_dependencies(talker beginner_tutorials_generate_messages_cpp)

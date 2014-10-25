@@ -24,6 +24,7 @@ public:
 //	int indx2DTo1D(int column, int row);
 //	int indx1DTo2D(int indx);
 
+	int getIndex(int row, int column);
 
 	// Setters and getters
 
@@ -38,12 +39,14 @@ public:
 	const geometry_msgs::Pose& getOrigin() const;
 	void setOrigin(const geometry_msgs::Pose& origin);
 	const int* getOriginPx() const;
-	int getRadiusPx() const;
-	void setRadiusPx(int radiusPx);
+	int getM_robotSizePx() const;
+	void setM_robotSizePx(int radiusPx);
 	float getResolution() const;
 	void setResolution(float resolution);
 	bool isUpToDate() const;
 	void setUpToDate(bool upToDate);
+	bool isAlreadyInflated() const;
+	void setAlreadyInflated(bool alreadyInflated);
 
 private:
 	double m_robotSize;
@@ -51,7 +54,7 @@ private:
 	int nRow, nColumn;
 	geometry_msgs::Pose origin;
 	float resolution;
-	int radiusPx;
+	int m_robotSizePx;
 	int originPx[2];
 	bool upToDate, alreadyInflated;
 

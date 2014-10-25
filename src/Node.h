@@ -10,8 +10,10 @@
 
 class Node {
 public:
-	virtual ~Node();
+	// Constructor and Deconstructor
+
 	Node(int row, int column);
+	~Node();
 
 	// Getters and setters
 	int getColumn() const;
@@ -22,6 +24,9 @@ public:
 	void setPreviousNode(Node &_previousNode);
 	int getRow() const;
 	void setRow(int row);
+	double getExpectedCost() const;
+	void setExpectedCost(double expectedCost);
+
 	///
 
 
@@ -29,6 +34,7 @@ public:
 private:
 	int row, column;
 	double cost;
+	double expectedCost;
 	Node * previousNode;
 
 };
@@ -38,7 +44,7 @@ class CompareNodeCost {
 public:
     bool operator()(Node& N1, Node& N2)
     {
-       if (N1.getCost() > N2.getCost()) return true;
+       if (N1.getExpectedCost() > N2.getExpectedCost()) return true;
        return false;
     }
 };

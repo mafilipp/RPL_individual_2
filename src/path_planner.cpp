@@ -1,11 +1,11 @@
 
-//#include "path_planner.h"
-//#include <assert.h>
+#include "path_planner.h"
+#include <assert.h>
 
 
-PathPlanner::PathPlanner()
+PathPlanner::PathPlanner(Map & _map)
 {
-
+	searchMap = _map;
 }
 
 //PathPlanner::PathPlanner(geometry_msgs::Point _start, geometry_msgs::Point _goal)

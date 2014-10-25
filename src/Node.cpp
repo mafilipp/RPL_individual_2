@@ -12,7 +12,8 @@ Node::Node(int row, int column) {
 	this->row = row;
 	this->column = column;
 	this->cost = std::numeric_limits<int>::max(); // Set initial cost to inf
-	this->previousNode = NULL;
+	this->expectedCost = std::numeric_limits<int>::max(); // Set initial cost to inf
+//	this->previousNode = NULL;
 }
 
 Node::~Node() {
@@ -64,4 +65,12 @@ int Node::getRow() const {
 
 void Node::setRow(int row) {
 	this->row = row;
+}
+
+double Node::getExpectedCost() const {
+	return expectedCost;
+}
+
+void Node::setExpectedCost(double expectedCost) {
+	this->expectedCost = expectedCost;
 }

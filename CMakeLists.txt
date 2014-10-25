@@ -100,9 +100,6 @@ include_directories(
 )
 
 ## Declare a cpp library
- add_library(map
-   src/map.cpp
- )
 
 ## Declare a cpp executable
 # add_executable(path_planning_node src/path_planning_node.cpp)
@@ -164,6 +161,6 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-add_executable(path_planning src/main.cpp)
-target_link_libraries(path_planning map ${catkin_LIBRARIES})
+add_executable(path_planning src/main.cpp src/map.cpp src/Node.cpp src/path_planner.cpp src/graph_search.cpp src/A_star_search.cpp)
+target_link_libraries(path_planning ${catkin_LIBRARIES})
 #add_dependencies(talker beginner_tutorials_generate_messages_cpp)

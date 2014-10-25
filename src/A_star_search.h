@@ -11,15 +11,18 @@
 #include <geometry_msgs/Point.h>
 #include "graph_search.h"
 #include "Node.h"
+//#include "map.h"
+
 
 class AStarSearch : public GraphSearch
 {
 public: 
-	AStarSearch();
+	AStarSearch(Map & _map);
 //	AStarSearch(geometry_msgs::Point _start, geometry_msgs::Point _goal);
 	~AStarSearch();
 	void findPath(geometry_msgs::Point start, geometry_msgs::Point goal);
-	//...
+	//Compute the manatthan distance between where we are and the goal
+	int manDist(Node Current, Node Goal);
 protected:
 	//...
 private:

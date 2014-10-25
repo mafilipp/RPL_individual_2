@@ -11,15 +11,17 @@
 #include <queue>
 #include "path_planner.h"
 #include "Node.h"
+//#include "map.h"
+
 
 
 class GraphSearch : public PathPlanner
 {
 public:
 
-	GraphSearch();
+	GraphSearch(Map & _map);
 	//GraphSearch(geometry_msgs::Point start, geometry_msgs::Point goal);
-	~GraphSearch();
+	virtual ~GraphSearch();
 
 	virtual void findPath(geometry_msgs::Point start, geometry_msgs::Point goal) = 0;
 	//...

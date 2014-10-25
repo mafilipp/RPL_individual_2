@@ -2,12 +2,11 @@
 #include <nav_msgs/OccupancyGrid.h>
 #include <nav_msgs/Path.h>
 #include "map.h"
-//#include "map.cpp"
 #include "path_planner.h"
 #include "graph_search.h"
 #include "A_star_search.h"
 #include "Node.h"
-#include "Node.cpp"
+
 #include <queue>
 #include <vector>
 
@@ -92,7 +91,7 @@ int main(int argc, char **argv)
 //  aStarPlanner.setPublisher(pathPublisher);
 
   /////////////////////////// Test for pick out the node with major cost
-//    Node a1(12,12);
+    Node a1(12,12);
 //    Node a2(12,23);
 //    a1.cost = 1;
 //    a2.cost = 333;
@@ -123,9 +122,17 @@ int main(int argc, char **argv)
 //  	  // Wait
 //    }
 
-    ROS_INFO("Before inflate");
-    gridMap.inflate();
-    ROS_INFO("After inflate");
+    if(gridMap.isUpToDate() and not gridMap.isAlreadyInflated())
+    {
+//        ROS_INFO("Before inflate");
+//        gridMap.inflate();
+//        ROS_INFO("After inflate");
+//        Node nodo(12,13);
+        AStarSearch Astar(gridMap);
+
+    }
+
+
 
 
     // Update the start and the goal
