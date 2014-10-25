@@ -91,6 +91,8 @@ void Map::inflate()
 		}
 		ROS_INFO("Kernel size = %d",sizeKernel);
 
+		int kernelCalc = floor(sizeKernel/2);
+		ROS_INFO("kernelCalc = %d",kernelCalc);
 
 
 
@@ -108,8 +110,7 @@ void Map::inflate()
 		}
 
 
-		int kernelCalc = floor(sizeKernel/2);
-		ROS_INFO("kernelCalc = %d",kernelCalc);
+
 
 
 
@@ -177,7 +178,7 @@ void Map::inflate()
 //				}
 
 
-				ROS_INFO("r = %d,	c=%d	",r,c);
+//				ROS_INFO("r = %d,	c=%d	",r,c);
 
 //				idxRowMin = -kernelCalc;
 //				idxColumnMin = -kernelCalc;
@@ -195,25 +196,25 @@ void Map::inflate()
 
 				// Calculation
 
-				for(int rF = -kernelCalc; rF < kernelCalc; rF++)
+				for(int rF = -kernelCalc; rF <= kernelCalc; rF++)
 				{
-					for(int cF = -kernelCalc; cF < kernelCalc; cF++)
+					for(int cF = -kernelCalc; cF <= kernelCalc; cF++)
 					{
-						if((r + rF > 0) and (r + rF < nRow - 1) and (c + cF > 0) and (c + cF < nColumn - 1))
+						if((r + rF >= 0) and (r + rF <= nRow - 1) and (c + cF >= 0) and (c + cF <= nColumn - 1))
 						{
 							if((m_map.data[getIndex(r+rF, c+cF)] > 0) and (kernel[rF + kernelCalc][cF + kernelCalc] > 0))
 							{
 								inflatedMap.m_map.data[c + r*nColumn] = 100;
 							}
 
-							ROS_INFO("r = %d,	c=%d	rF=%d	cF=%d",r,c,rF,cF);
+//							ROS_INFO("r = %d,	c=%d	rF=%d	cF=%d",r,c,rF,cF);
 						}
 
 					}
 				}
 			}
 		}
-		m_map = inflatedMap.m_map;
+		m_map.data = inflatedMap.m_map.data;
 		alreadyInflated = true;
 	}
 }

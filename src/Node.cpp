@@ -8,11 +8,18 @@
 #include "Node.h"
 #include <limits>
 
+Node::Node()
+{
+	this->cost = std::numeric_limits<int>::max(); // Set initial cost to inf
+	this->expectedCost = std::numeric_limits<int>::max(); // Set initial cost to inf
+	this->occupied = false;
+}
 Node::Node(int row, int column) {
 	this->row = row;
 	this->column = column;
 	this->cost = std::numeric_limits<int>::max(); // Set initial cost to inf
 	this->expectedCost = std::numeric_limits<int>::max(); // Set initial cost to inf
+	this->occupied = false;
 //	this->previousNode = NULL;
 }
 
@@ -73,4 +80,20 @@ double Node::getExpectedCost() const {
 
 void Node::setExpectedCost(double expectedCost) {
 	this->expectedCost = expectedCost;
+}
+
+bool Node::isOccupied() const {
+	return occupied;
+}
+
+void Node::setOccupied(bool occupied) {
+	this -> occupied = occupied;
+}
+
+int Node::getId() const {
+	return id;
+}
+
+void Node::setId(int id) {
+	this->id = id;
 }

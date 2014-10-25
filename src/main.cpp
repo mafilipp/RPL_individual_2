@@ -91,8 +91,11 @@ int main(int argc, char **argv)
 //  aStarPlanner.setPublisher(pathPublisher);
 
   /////////////////////////// Test for pick out the node with major cost
-    Node a1(12,12);
-//    Node a2(12,23);
+//    Node a1(12,12);
+//    Node a2(12,12);
+//
+//    bool h;
+//    h = a1 == a2;
 //    a1.cost = 1;
 //    a2.cost = 333;
 //    std::priority_queue<Node, std::vector<Node>, CompareNodeCost> costQueue;
@@ -125,7 +128,7 @@ int main(int argc, char **argv)
     if(gridMap.isUpToDate() and not gridMap.isAlreadyInflated())
     {
 //        ROS_INFO("Before inflate");
-//        gridMap.inflate();
+        gridMap.inflate();
 //        ROS_INFO("After inflate");
 //        Node nodo(12,13);
         AStarSearch Astar(gridMap);

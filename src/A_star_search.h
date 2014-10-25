@@ -23,8 +23,14 @@ public:
 	void findPath(geometry_msgs::Point start, geometry_msgs::Point goal);
 	//Compute the manatthan distance between where we are and the goal
 	int manDist(Node Current, Node Goal);
+
+
 protected:
-	//...
+	std::list<Node> Sclosed;
+	std::list<Node> Poptimal;
+	std::list<int> SopenList;
+    std::priority_queue<Node, std::vector<Node>, CompareNodeCost> Sopen;
+
 private:
 	//...
 };

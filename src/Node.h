@@ -12,6 +12,7 @@ class Node {
 public:
 	// Constructor and Deconstructor
 
+	Node();
 	Node(int row, int column);
 	~Node();
 
@@ -26,16 +27,30 @@ public:
 	void setRow(int row);
 	double getExpectedCost() const;
 	void setExpectedCost(double expectedCost);
+	bool isOccupied() const;
+	void setOccupied(bool occupied);
+	int getId() const;
+	void setId(int id);
 
 	///
+
+    bool operator==(const Node& n1)
+     {
+        if( (n1.row == this -> row) and (n1.column == this -> column))
+        	return true;
+        else
+        	return false;
+     }
 
 
 
 private:
-	int row, column;
+	int row, column, id;
 	double cost;
 	double expectedCost;
 	Node * previousNode;
+	bool occupied;
+
 
 };
 
