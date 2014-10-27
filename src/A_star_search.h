@@ -29,6 +29,8 @@ public:
 
 	int manDist(Node Current, Node Goal);
 
+	double euclideanDistance(Node Current, Node Goal);
+
 	nav_msgs::Path computePath();
 
 	void publishPathRviz(std::list<int> Poptimal);

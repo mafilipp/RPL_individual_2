@@ -54,7 +54,7 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "path_planner");
 
   double robotRadius;
-  robotRadius = 0.06; //[m]
+  robotRadius = 0.03; //[m]
   Map gridMap(robotRadius);
 
   ros::NodeHandle n;
@@ -223,12 +223,35 @@ bool PathComputed = false;
 //
 //        Astar.setPoptimal(lista);
 
-        Astar.findPath(Start, Goal);
-
-        ROS_INFO("Noi siamo qua %d", Astar.getPoptimal().empty()); // esce che è empty
-
-        pathPublisher.publish(Astar.computePath());
+//        Astar.findPath(Start, Goal);
+//
+////        ROS_INFO("Noi siamo qua %d", Astar.getPoptimal().empty()); // esce che è empty
+//
+//        pathPublisher.publish(Astar.computePath());
         PathComputed = true;
+
+        ////////////
+
+        geometry_msgs::Point s1, s2, s3, s4;
+
+         s1.x = 1.8;
+         s1.y = 0.2;
+
+         s2.x = 1.8;
+         s2.y =  1.8;
+
+         s3.x = 0.2,
+         s3.y = 1.8;
+
+         s4.x = 0.2;
+         s4.y = 2;
+        Astar.findPath(s1, s2);
+        pathPublisher.publish(Astar.computePath());
+        Astar.findPath(s2, s3);
+        pathPublisher.publish(Astar.computePath());
+        Astar.findPath(s3, s4);
+        pathPublisher.publish(Astar.computePath());
+        /////////////////
 
 
     }

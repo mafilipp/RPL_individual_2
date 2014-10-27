@@ -144,12 +144,12 @@ void AStarSearch::findPath(geometry_msgs::Point start, geometry_msgs::Point goal
 				{
 					// Update the neighbors' expected cost
 
-					if( (r == -1 and (c ==-1 or c==1 )) or (r == 1 and (c ==-1 or c==1 )) )
-					{
-
-					}
-					else
-						{
+//					if( (r == -1 and (c ==-1 or c==1 )) or (r == 1 and (c ==-1 or c==1 )) )
+//					{
+//
+//					}
+//					else
+//						{
 						Node nNeighbor(nNext.getRow() + r, nNext.getColumn() + c);
 
 						// first check if we are in the grid or outside
@@ -204,7 +204,7 @@ void AStarSearch::findPath(geometry_msgs::Point start, geometry_msgs::Point goal
 //										searchMapNode[nNext.getRow() + r][nNext.getColumn() + c].setCost(searchMapNode[nNext.getRow() + r][nNext.getColumn() + c].getCost() + 1);
 										searchMapNode[nNext.getRow() + r][nNext.getColumn() + c].setCost(nNext.getCost() + 1);
 
-										searchMapNode[nNext.getRow() + r][nNext.getColumn() + c].setExpectedCost(searchMapNode[nNext.getRow() + r][nNext.getColumn() + c].getCost() + manDist(searchMapNode[nNext.getRow() + r][nNext.getColumn() + c], Goal));
+										searchMapNode[nNext.getRow() + r][nNext.getColumn() + c].setExpectedCost(searchMapNode[nNext.getRow() + r][nNext.getColumn() + c].getCost() + euclideanDistance(searchMapNode[nNext.getRow() + r][nNext.getColumn() + c], Goal));
 										searchMapNode[nNext.getRow() + r][nNext.getColumn() + c].setPreviousNode(& searchMapNode[nNext.getRow()][nNext.getColumn()]); //
 
 //										ROS_INFO("cost = %f", searchMapNode[nNext.getRow() + r][nNext.getColumn() + c].getCost());
@@ -222,7 +222,7 @@ void AStarSearch::findPath(geometry_msgs::Point start, geometry_msgs::Point goal
 										{
 //											std::cout << "current node 2: " << nNext.getRow() + r << " " << nNext.getColumn() + c << std::endl;
 											searchMapNode[nNext.getRow() + r][nNext.getColumn() + c].setCost(gCostTmp);
-											searchMapNode[nNext.getRow() + r][nNext.getColumn() + c].setExpectedCost(nNeighbor.getCost() + manDist(nNeighbor,Goal) );
+											searchMapNode[nNext.getRow() + r][nNext.getColumn() + c].setExpectedCost(nNeighbor.getCost() + euclideanDistance(nNeighbor,Goal) );
 											searchMapNode[nNext.getRow() + r][nNext.getColumn() + c].setPreviousNode(& nNext);
 										}
 									}
@@ -232,8 +232,8 @@ void AStarSearch::findPath(geometry_msgs::Point start, geometry_msgs::Point goal
 
 								//if
 							}
-
-						}
+//
+//						}
 
 					}
 
@@ -243,7 +243,11 @@ void AStarSearch::findPath(geometry_msgs::Point start, geometry_msgs::Point goal
 			}
 		}
 	}
+	if(Sopen.empty() and not finish)
+		ROS_INFO("GOAL UNREACHABLE");
 }
+
+
 
 		//(1) Check if n
 
@@ -266,6 +270,10 @@ int AStarSearch::manDist(Node Current, Node Goal)
 	return abs(Current.getRow() - Goal.getRow()) + abs(Current.getColumn() - Goal.getColumn());
 }
 
+double AStarSearch::euclideanDistance(Node Current, Node Goal)
+{
+	return sqrt(pow(Current.getRow() - Goal.getRow(),2) + pow(Current.getColumn() - Goal.getColumn(),2));
+}
 
 // Compute a path between start and goal
 nav_msgs::Path AStarSearch::computePath()
