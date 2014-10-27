@@ -30,6 +30,7 @@ protected:
 
 private:
 
+//	  int * asd;
 };
 
 
