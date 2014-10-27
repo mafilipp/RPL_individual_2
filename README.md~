@@ -5,7 +5,7 @@ This Ros node afford to find an optimal path using A* algorithm, given a map fro
 
 
 -- Usage
-First start the ROS and rviz for the visualization (all in separate terminal):
+First start the ROS and rviz for the visualization:
 
 	roscore
 

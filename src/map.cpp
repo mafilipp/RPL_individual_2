@@ -3,19 +3,19 @@
  *
  *  Created on: Oct 22, 2014
  *      Author: mafilipp
+ *      Note: Implementation of map.h
  */
 
 #include "map.h"
 #include <assert.h>
 #include <ros/ros.h>
 
-
+// Constructor and deconstructor
 Map::Map(double robotSize)
 {
 	assert(robotSize>=0); // Ensure that the robot size is non-negative
-	m_robotSize = robotSize;		//...
-	upToDate = 0;
-
+	m_robotSize = robotSize;
+	upToDate = false;
 }
 
 Map::Map(nav_msgs::OccupancyGrid map, double robotSize)
@@ -30,55 +30,44 @@ Map::Map(nav_msgs::OccupancyGrid map, double robotSize)
 	origin = map.info.origin;
 	resolution = map.info.resolution;
 	m_robotSizePx = m_robotSize/resolution;
-//	radiusPx = ceil(m_robotSize/resolution/2); //[cell]
-//	if (radiusPx % 2 == 0)
-//			radiusPx += 1; // In order to inflate the map we need a odd filter
-	upToDate = 1;
+	upToDate = true;
 	alreadyInflated = false;
 }
 
 Map::~Map()
 {
-	//delete m_map;
+
 }
 
+// ROS Callback
 void Map::mapCallback(const nav_msgs::OccupancyGrid::ConstPtr &map)
 {
-	//Create the map
-	ROS_INFO("callback");
+	ROS_INFO("map callback");
 
+	// Fill the map with the message data
 	m_map = *map;
 	nColumn = m_map.info.height;
 	nRow = m_map.info.width;
 	origin = m_map.info.origin;
 	resolution = m_map.info.resolution;
-//	double tmp = m_robotSize/resolution;
-//	m_robotSizePx = ceil(tmp); // Always better to consider the robot with some tollerance
 	m_robotSizePx = m_robotSize/resolution;
 	upToDate = true;
-//	radiusPx = ceil(m_robotSize/resolution/2); //[cell]
-//	if (radiusPx % 2 == 0)
-//			radiusPx += 1; // In order to inflate the map we need a odd filter
+
 	ROS_INFO("Element Map correctly updated");
 }
-//...
 
-//Remember
-//array[3][4] = [row] [column]
-//[0][0]  [0][1]  [0][2]  [0][3]  [0][4]
-//[1][0]  [1][1]  [1][2]  [1][3]  [1][4]
-//[2][0]  [2][1]  [2][2]  [2][3]  [2][4]
+// Inflate the map
 void Map::inflate()
 {
-	if( m_robotSizePx > 1 and upToDate and not alreadyInflated) // >1 else it doesn't make sense to inflate
+	if( m_robotSizePx > 1 and upToDate and not alreadyInflated) // if < 1px else it doesn't make sense to inflate
 	{
-		ROS_INFO("INFLATING!!");
-		ROS_INFO("RobotSizePx = %d",m_robotSizePx);
-
+		ROS_INFO("Inflating the map");
 
 		// Define the filter kernel
 		int sizeKernel;
 		bool whiteAngle = false;
+		// This tell us, since we want to have an odd filter, in the case that the filter robot size in px is
+		// even, we add 1 px but in compensation we take away the angle on the filter kernel
 
 		if (m_robotSizePx % 2 == 0)
 		{
@@ -89,18 +78,14 @@ void Map::inflate()
 		{
 			sizeKernel = m_robotSizePx;
 		}
-		ROS_INFO("Kernel size = %d",sizeKernel);
 
 		int kernelCalc = floor(sizeKernel/2);
-		ROS_INFO("kernelCalc = %d",kernelCalc);
-
-
+		// kernelCalc represent the part of the filter that could stay out of the image (map) during the convolution
 
 		// Create the filter kernel
 		int kernel[sizeKernel][sizeKernel];
 
-
-		// Populate
+		// Populate the kernel
 		for(int row = 0; row < sizeKernel; row++)
 		{
 			for(int column = 0; column < sizeKernel; column++)
@@ -109,14 +94,7 @@ void Map::inflate()
 			}
 		}
 
-
-
-
-
-
-		// Until here is right: the only problem is that if I give a m_robotSize = 0.08; 0.08/0.03 = 2 and not 2....
-
-		// if robot dimension compared to filter small, make the angle free
+		// if robot dimension compared to the filter is small, make the angle free (see above (whiteAngle description))
 		if(whiteAngle)
 		{
 			kernel[0][0] = 0;
@@ -125,120 +103,47 @@ void Map::inflate()
 			kernel[sizeKernel - 1][sizeKernel - 1] = 0;
 		}
 
-		for(int i = 0; i < sizeKernel; i++)
-		{
-			for(int j = 0; j < sizeKernel; j++)
-			{
-			ROS_INFO("Kernel Element = %d",kernel[i][j]);
-			}
-		}
-		// Create inflated map
+
+		// Create the map that will be inflated
 		Map inflatedMap(m_map,m_robotSize);
 
-//		int rowMin, rowMax, columnMin, columnMax;
-//		rowMin = 0;
-//		rowMax = sizeKernel-1;
-//		columnMin = 0;
-//		columnMax = sizeKernel-1;
-//		int idxRowMin, idxRowMax, idxColumnMin, idxColumnMax;
+		// Calculation for the inflation
 
-		// Make calculation
+		// For each px
 		for(int r = 0; r < nRow; r++)
 		{
 			for(int c = 0; c < nColumn; c++)
 			{
-
-//				ROS_INFO("r = %d,	c=%d	",r,c);
-//
-//				idxRowMin = -kernelCalc;
-//				idxColumnMin = -kernelCalc;
-//				idxRowMax = kernelCalc;
-//				idxColumnMax = kernelCalc;
-
-//				if (r - kernelCalc < rowMin)
-//					idxRowMin = 0;
-//				if (r + kernelCalc > rowMax)
-//						idxRowMax = nRow -1;
-//				if (c - kernelCalc < columnMin)
-//					idxColumnMin = 0;
-//				if (c + kernelCalc > columnMax)
-//						idxColumnMax = nColumn -1;
-//
-//				// Calculation
-//
-//				for(int rF = idxRowMin; rF < idxRowMax; rF++ )
-//				{
-//					for(int cF = idxColumnMin; cF < idxColumnMax; cF++ )
-//					{
-//						if((m_map.data[getIndex(r+rF, c+cF)] > 0) and (kernel[rF][cF] > 0))
-//						inflatedMap.m_map.data[c + r*nColumn] = 100;
-//
-//						ROS_INFO("r = %d,	c=%d	rF=%d	cF=%d",r,c,rF,cF);
-//					}
-//				}
-
-
-//				ROS_INFO("r = %d,	c=%d	",r,c);
-
-//				idxRowMin = -kernelCalc;
-//				idxColumnMin = -kernelCalc;
-//				idxRowMax = kernelCalc;
-//				idxColumnMax = kernelCalc;
-//
-//				if (r - kernelCalc < rowMin)
-//					idxRowMin = 0;
-//				if (r + kernelCalc > rowMax)
-//						idxRowMax = nRow -1;
-//				if (c - kernelCalc < columnMin)
-//					idxColumnMin = 0;
-//				if (c + kernelCalc > columnMax)
-//						idxColumnMax = nColumn -1;
-
-				// Calculation
-
+				// For every element of the filter
 				for(int rF = -kernelCalc; rF <= kernelCalc; rF++)
 				{
 					for(int cF = -kernelCalc; cF <= kernelCalc; cF++)
 					{
+						// Check if we are in the boundaries of the image
 						if((r + rF >= 0) and (r + rF <= nRow - 1) and (c + cF >= 0) and (c + cF <= nColumn - 1))
 						{
 							if((m_map.data[getIndex(r+rF, c+cF)] > 0) and (kernel[rF + kernelCalc][cF + kernelCalc] > 0))
 							{
 								inflatedMap.m_map.data[c + r*nColumn] = 100;
 							}
-
-//							ROS_INFO("r = %d,	c=%d	rF=%d	cF=%d",r,c,rF,cF);
 						}
-
 					}
 				}
 			}
 		}
+		// inflate current map
 		m_map.data = inflatedMap.m_map.data;
 		alreadyInflated = true;
 	}
 }
 
-
-
+// Since map.data is an array, getIndex convert the matrix index (easy for calculation) in the aray index
 int Map::getIndex(int row, int column)
 {
 	return row*nColumn + column;
 }
 
-//int Map::getIndex2Dfrom1D(int index, int lengthColumn)
-//{
-//	return row*nColumn + column;
-//}
-//
-//int Map::getIndex1Dfrom2D(int row, int column, int lengthColumn)
-//{
-//	return row*lengthColumn + column;
-//}
-//
-
-//		forSetters and getters
-
+// Getters and Setters
 void Map::setRobotSize(double robotSize)
 {
 	assert(robotSize >= 0); // Ensure that the robot size is non-negative

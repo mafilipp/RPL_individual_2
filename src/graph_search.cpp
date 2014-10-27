@@ -1,21 +1,19 @@
-//
-//#include "path_planner.h"
-//
-//GraphSearch::findPath(geometry_msg::Point start, geometry_msgs::Point goal)
-//{
-//	//
-//}
+/*
+ *  graph_search.cpp
+ *
+ *  Created on: Oct 22, 2014
+ *      Author: Filippo Martinoni
+ *      Note: implementation of graph_search.h
+ */
 
 #include "graph_search.h"
 
+// Constructor and destructor
 GraphSearch::GraphSearch(Map & _map) : PathPlanner(_map)
 {
-//	PathPlanner(_map);
+
 }
-//GraphSearch::GraphSearch(geometry_msgs::Point start, geometry_msgs::Point goal);
-//{
-//	pathPlanner(geometry_msgs::Point start, geometry_msgs::Point goal);
-//}
+
 GraphSearch::~GraphSearch()
 {
 

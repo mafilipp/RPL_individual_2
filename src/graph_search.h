@@ -2,7 +2,8 @@
  * graph_search.h
  *
  *  Created on: Oct 22, 2014
- *      Author: mafilipp
+ *      Author: Filippo Martinoni
+ *      Note: Abstracted Class that afford the use of graph algorithm
  */
 
 #ifndef MAFILIPP_PATH_PLANNING_SRC_GRAPH_SEARCH_H_
@@ -11,26 +12,24 @@
 #include <queue>
 #include "path_planner.h"
 #include "Node.h"
-//#include "map.h"
-
 
 
 class GraphSearch : public PathPlanner
 {
 public:
 
+	// Constructor and destructor
 	GraphSearch(Map & _map);
-	//GraphSearch(geometry_msgs::Point start, geometry_msgs::Point goal);
 	virtual ~GraphSearch();
 
+	//Abstract function to find the optimal path between two node
 	virtual void findPath(geometry_msgs::Point start, geometry_msgs::Point goal) = 0;
-	//...
+
 protected:
+	// Priority queue that will always put on the top the node with the smallest expected cost
 	  std::priority_queue<Node, std::vector<Node>, CompareNodeCost> costQueue;
 
 private:
-
-//	  int * asd;
 };
 
 

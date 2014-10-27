@@ -1,8 +1,10 @@
 /*
  * Node.h
+
  *
  *  Created on: Oct 22, 2014
- *      Author: mafilipp
+ *      Author: Filippo Martinoni
+ *      Note: Node that are used for the graph search. CompareNodeCost needed for the priority queue in order to sort the node with smaller expected cost.
  */
 
 #ifndef MAFILIPP_PATH_PLANNING_SRC_NODE_H_
@@ -10,8 +12,8 @@
 
 class Node {
 public:
-	// Constructor and Deconstructor
 
+	// Constructor and Destructors
 	Node();
 	Node(int row, int column);
 	~Node();
@@ -32,11 +34,7 @@ public:
 	int getId() const;
 	void setId(int id);
 
-	///
-//	   void setProgram(clsProgram *x) { programEnrolled=x; }
-//	   clsProgram *getProgram() const { return programEnrolled; }
-
-
+	// Operator overloading
     bool operator==(const Node& n1)
      {
         if( (n1.m_row == m_row) and (n1.m_column == m_column))
@@ -45,29 +43,9 @@ public:
         	return false;
      }
 
-//	const Node*& getPreviousNode() const { // mi crea un pointer che pointa al pointer
-//		return m_previousNode;
-//	}
-//
-//	void setPreviousNode(const Node*& previousNode) {
-//		m_previousNode = previousNode;
-//	}
-
-//    Node operator=(Node other) {
-//    	this -> column = other.column;
-//    	this -> row = other.row;
-//    	this -> id = other.id;
-//    	this -> cost = other.cost;
-//    	this -> expectedCost = other.expectedCost;
-//    	this -> previousNode = other.previousNode;
-//    	this -> occupied = other.occupied;
-//
-//        return *this;
-//    }
-
-
 private:
-	int m_row;
+    // Attribute
+    int m_row;
 	int m_column;
 	int m_id;
 	double m_cost;
@@ -78,7 +56,7 @@ private:
 
 };
 
-
+// used from priority queue
 class CompareNodeCost {
 public:
     bool operator()(Node& N1, Node& N2)

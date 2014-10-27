@@ -2,7 +2,9 @@
  * map.h
  *
  *  Created on: Oct 22, 2014
- *      Author: mafilipp
+ *      Author: Filippo Martinoni
+ *      Note: Class that receive the information from ros and saves them in his instance.
+ *      	  It allows also to work on the map, like for example to inflate.
  */
 
 #ifndef MAFILIPP_PATH_PLANNING_SRC_MAP_H_
@@ -13,7 +15,7 @@
 
 class Map {
 public:
-	// Constructors and destructor
+	// Constructors and destructors
 	Map(double robotSize = 0);
 	Map(nav_msgs::OccupancyGrid map, double robotSize = 0);
 	void mapCallback(const nav_msgs::OccupancyGrid::ConstPtr &map);
@@ -21,13 +23,12 @@ public:
 
 	// inflate the current Map by the robot's radius
 	void inflate();
-//	int indx2DTo1D(int column, int row);
-//	int indx1DTo2D(int indx);
 
+	// Since map.data is an array, getIndex convert the matrix index (easy for calculation) in the aray index
 	int getIndex(int row, int column);
 
-	// Setters and getters
 
+	// Setters and getters
 	const nav_msgs::OccupancyGrid& getMap() const;
 	void setMap(const nav_msgs::OccupancyGrid& map);
 	double getRobotSize() const;
@@ -49,6 +50,7 @@ public:
 	void setAlreadyInflated(bool alreadyInflated);
 
 private:
+	// Attributes
 	double m_robotSize;
 	nav_msgs::OccupancyGrid m_map;
 	int nRow, nColumn;

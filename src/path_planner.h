@@ -2,7 +2,8 @@
  * path_planner.h
  *
  *  Created on: Oct 22, 2014
- *      Author: mafilipp
+ *      Author: Filippo Martinoni
+ *      Note: Class that give you the abstract instrument to perform a path search algorithm
  */
 
 #ifndef MAFILIPP_PATH_PLANNING_SRC_PATH_PLANNER_H_
@@ -15,13 +16,15 @@
 class PathPlanner
 {
 public:
+	// Constructor and destructor
 	PathPlanner(Map & _map);
-//	PathPlanner(geometry_msgs::Point _start, geometry_msgs::Point _goal);
 	~PathPlanner();
+
+	//Abstract function to find the optimal path between two node
 	virtual void findPath(geometry_msgs::Point start, geometry_msgs::Point goal) = 0;
-	//...
+
 protected:
-//	geometry_msgs::Point start, goal;
+	// Map in which we are going to plan the path
 	Map searchMap;
 
 private:
